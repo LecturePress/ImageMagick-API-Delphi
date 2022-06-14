@@ -41,6 +41,8 @@ type
   
   PPPixelWand = ^PPixelWand;
   
+  PQuantum = ^Quantum; 
+  
 var
 PixelGetException: function(const wand: PPixelWand; severity: PExceptionType): PAnsiChar; cdecl;
 PixelGetColorAsString: function(const wand: PPixelWand): PAnsiChar; cdecl;
@@ -53,13 +55,13 @@ PixelGetCyan: function(const wand: PPixelWand): Double; cdecl;
 PixelGetFuzz: function(const wand: PPixelWand): Double; cdecl;
 PixelGetGreen: function(const wand: PPixelWand): Double; cdecl;
 PixelGetMagenta: function(const wand: PPixelWand): Double; cdecl;
-PixelGetOpacity: function(const wand: PPixelWand): Double; cdecl; //Function name => PixelGetAlpha
+//PixelGetOpacity: function(const wand: PPixelWand): Double; cdecl; //Function name => PixelGetAlpha
 PixelGetRed: function(const wand: PPixelWand): Double; cdecl;
 PixelGetYellow: function(const wand: PPixelWand): Double; cdecl;
 
 PixelGetExceptionType: function(const wand: PPixelWand): ExceptionType; cdecl;
 
-PixelGetIndex: function(const wand: PPixelWand): IndexPacket; cdecl; //Result type => Quantum
+PixelGetIndex: function(const wand: PPixelWand): Quantum; cdecl;
 
 IsPixelWand: function(const wand: PPixelWand): MagickBooleanType; cdecl;
 IsPixelWandSimilar: function(p: PPixelWand; q: PPixelWand; const fuzz: double): MagickBooleanType; cdecl;
@@ -81,7 +83,7 @@ PixelGetBlueQuantum: function(const wand: PPixelWand): Quantum; cdecl;
 PixelGetCyanQuantum: function(const wand: PPixelWand): Quantum; cdecl;
 PixelGetGreenQuantum: function(const wand: PPixelWand): Quantum; cdecl;
 PixelGetMagentaQuantum: function(const wand: PPixelWand): Quantum; cdecl;
-PixelGetOpacityQuantum: function(const wand: PPixelWand): Quantum; cdecl; //Function name => PixelGetAlphaQuantum
+//PixelGetOpacityQuantum: function(const wand: PPixelWand): Quantum; cdecl; //Function name => PixelGetAlphaQuantum
 PixelGetRedQuantum: function(const wand: PPixelWand): Quantum; cdecl;
 PixelGetYellowQuantum: function(const wand: PPixelWand): Quantum; cdecl;
 
