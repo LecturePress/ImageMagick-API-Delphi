@@ -16,6 +16,16 @@
   ImageMagick image methods.
 }
 
+{#define MaximumNumberOfImageMoments  8
+#define MaximumNumberOfPerceptualColorspaces  6
+#define MaximumNumberOfPerceptualHashes  7 }
+
+const
+  MaximumNumberOfImageMoments = 8;
+  MaximumNumberOfPerceptualColorspaces = 6;
+  MaximumNumberOfPerceptualHashes = 7;
+
+
 type
   ChannelStatistics = record
     depth: culong;
@@ -31,30 +41,101 @@ type
     standard_deviation,
     kurtosis,
     skewness,
-    entropy: double;
+    entropy,
+    median : double;
   end;
   
   PChannelStatistics = ^ChannelStatistics;
+  
+  ChannelMoments = record
+    invariant[MaximumNumberOfImageMoments+1]: double;
+    centroid,
+    ellipse_axis: PointInfo;
+    ellipse_angle,
+    ellipse_eccentricity,
+    ellipse_intensity: double;
+  end;
+  
+  PChannelMoments = ^ChannelMoments;  
+  
+  ChannelPerceptualHash = record 
+    srgb_hu_phash[MaximumNumberOfImageMoments+1],
+    hclp_hu_phash[MaximumNumberOfImageMoments+1]: double; 
+    number_colorspaces: culong; 
+    colorspace[MaximumNumberOfPerceptualColorspaces+1]: ColorspaceType;
+    phash[MaximumNumberOfPerceptualColorspaces+1][MaximumNumberOfImageMoments+1]: double;
+    number_channels: culong;
+  end; 
+  
+  PChannelPerceptualHash = ^ChannelPerceptualHash;
+  
+  MagickEvaluateOperator = (UndefinedEvaluateOperator,
+                            AbsEvaluateOperator,
+                            AddEvaluateOperator,
+                            AddModulusEvaluateOperator,
+                            AndEvaluateOperator,
+                            CosineEvaluateOperator,
+                            DivideEvaluateOperator,
+                            ExponentialEvaluateOperator,
+                            GaussianNoiseEvaluateOperator,
+                            ImpulseNoiseEvaluateOperator,
+                            LaplacianNoiseEvaluateOperator,
+                            LeftShiftEvaluateOperator,
+                            LogEvaluateOperator,
+                            MaxEvaluateOperator,
+                            MeanEvaluateOperator,
+                            MedianEvaluateOperator,
+                            MinEvaluateOperator,
+                            MultiplicativeNoiseEvaluateOperator,
+                            MultiplyEvaluateOperator,
+                            OrEvaluateOperator,
+                            PoissonNoiseEvaluateOperator,
+                            PowEvaluateOperator,
+                            RightShiftEvaluateOperator,
+                            RootMeanSquareEvaluateOperator,
+                            SetEvaluateOperator,
+                            SineEvaluateOperator,
+                            SubtractEvaluateOperator,
+                            SumEvaluateOperator,
+                            ThresholdBlackEvaluateOperator,
+                            ThresholdEvaluateOperator,
+                            ThresholdWhiteEvaluateOperator,
+                            UniformNoiseEvaluateOperator,
+                            XorEvaluateOperator,
+                            InverseLogEvaluateOperator);  
 
-{extern MagickExport ChannelStatistics
-  *GetImageChannelStatistics(const Image *,ExceptionInfo *);
+  MagickFunction = (UndefinedFunction, 
+                    ArcsinFunction,
+                    ArctanFunction,
+                    PolynomialFunction,
+                    SinusoidFunction);
 
-extern MagickExport MagickBooleanType
-  GetImageChannelExtrema(const Image *,const ChannelType,unsigned long *,
-    unsigned long *,ExceptionInfo *),
-  GetImageExtrema(const Image *,unsigned long *,unsigned long *,
-    ExceptionInfo *),
-  GetImageChannelMean(const Image *,const ChannelType,double *,double *,
-    ExceptionInfo *),
-  GetImageMean(const Image *,double *,double *,ExceptionInfo *),
-  SetImageChannelDepth(Image *,const ChannelType,const unsigned long),
-  SetImageDepth(Image *,const unsigned long);
+  StatisticType = (UndefinedStatistic,
+                   GradientStatistic,
+                   MaximumStatistic,
+                   MeanStatistic,
+                   MedianStatistic,
+                   MinimumStatistic,
+                   ModeStatistic,
+                   NonpeakStatistic,
+                   RootMeanSquareStatistic,
+                   StandardDeviationStatistic,
+                   ContrastStatistic);
+                   
+//extern MagickExport                   
+GetImageStatistics: function(const image: PImage; exception: PExceptionInfo): PChannelStatistics; cdecl;
+GetImageMoments: function(const image: PImage; exception: PExceptionInfo): PChannelMoments; cdecl;
+GetImagePerceptualHash: function(const image: PImage; exception: PExceptionInfo): PChannelPerceptualHash; cdecl;
+ 
+EvaluateImages: function(const image: PImage; const op: MagickEvaluateOperator; exception: PExceptionInfo): PImage; cdecl;
+PolynomialImage: function(const image: PImage; const number_terms: culong; const terms: PDouble; exception: PExceptionInfo): PImage; cdecl;
+StatisticImage: function(const image: PImage; const &type: StatisticType; const width: culong; const height: culong; exception: PExceptionInfo): PImage; cdecl;
 
-extern MagickExport RectangleInfo
-  GetImageBoundingBox(const Image *,ExceptionInfo *exception);
-
-extern MagickExport unsigned long
-  GetImageChannelDepth(const Image *,const ChannelType,ExceptionInfo *),
-  GetImageDepth(const Image *,ExceptionInfo *),
-  GetImageQuantumDepth(const Image *,const MagickBooleanType);}
-
+EvaluateImage: function(image: PImage; const op: MagickEvaluateOperator; const value: Double; exception: PExceptionInfo): MagickBooleanType; cdecl;
+FunctionImage: function(image: PImage; const &function: MagickFunction; const number_parameters: culong; const parameters: PDouble; exception: PExceptionInfo): MagickBooleanType; cdecl;
+GetImageEntropy: function(const image: PImage; entropy: PDouble; exception: PExceptionInfo): MagickBooleanType; cdecl;
+GetImageExtrema: function(const image: PImage; minima: pculong; maxima: pculong; exception: PExceptionInfo): MagickBooleanType; cdecl;
+GetImageMean: function(const image: PImage; mean: PDouble; standard_deviation: PDouble; exception: PExceptionInfo): MagickBooleanType; cdecl;
+GetImageMedian: function(const image: PImage; median: PDouble; exception: PExceptionInfo): MagickBooleanType; cdecl;
+GetImageKurtosis: function(const image: PImage; kurtosis: PDouble; skewness: PDouble; exception: PExceptionInfo): MagickBooleanType; cdecl;
+GetImageRange: function(const image: PImage; minima: PDouble; maxima: PDouble; exception: PExceptionInfo): MagickBooleanType; cdecl;                   
