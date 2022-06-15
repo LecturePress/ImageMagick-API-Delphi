@@ -121,7 +121,8 @@ type
                    RootMeanSquareStatistic,
                    StandardDeviationStatistic,
                    ContrastStatistic);
-                   
+
+var
 //extern MagickExport                   
 GetImageStatistics: function(const image: PImage; exception: PExceptionInfo): PChannelStatistics; cdecl;
 GetImageMoments: function(const image: PImage; exception: PExceptionInfo): PChannelMoments; cdecl;
@@ -139,3 +140,4 @@ GetImageMean: function(const image: PImage; mean: PDouble; standard_deviation: P
 GetImageMedian: function(const image: PImage; median: PDouble; exception: PExceptionInfo): MagickBooleanType; cdecl;
 GetImageKurtosis: function(const image: PImage; kurtosis: PDouble; skewness: PDouble; exception: PExceptionInfo): MagickBooleanType; cdecl;
 GetImageRange: function(const image: PImage; minima: PDouble; maxima: PDouble; exception: PExceptionInfo): MagickBooleanType; cdecl;                   
+
