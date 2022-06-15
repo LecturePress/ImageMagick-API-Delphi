@@ -1,37 +1,34 @@
-{
-  Copyright 1999-2005 ImageMagick Studio LLC, a non-profit organization
+/*
+  Copyright @ 2000 ImageMagick Studio LLC, a non-profit organization
   dedicated to making software imaging solutions freely available.
   
-  You may not use this file except in compliance with the License.
+  You may not use this file except in compliance with the License.  You may
   obtain a copy of the License at
   
-    http://www.imagemagick.org/script/license.php
+    https://imagemagick.org/script/license.php
   
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
+  MagickCore methods to lock and unlock semaphores.
+*/
 
-  ImageMagick methods to lock and unlock semaphores.
-}
-#ifndef _MAGICK_SEMAPHORE_H
-#define _MAGICK_SEMAPHORE_H
-#endif
+type
+  SemaphoreInfo = record //
+  end;
 
-typedef struct SemaphoreInfo
-  SemaphoreInfo;
+  PSemaphoreInfo = ^SemaphoreInfo;
+  PPSemaphoreInfo = ^PSemaphoreInfo;
 
-extern MagickExport MagickBooleanType
-  LockSemaphoreInfo(SemaphoreInfo *),
-  UnlockSemaphoreInfo(SemaphoreInfo *);
+var
+//extern MagickExport
 
-extern MagickExport SemaphoreInfo
-  *AllocateSemaphoreInfo(void),
-  *DestroySemaphoreInfo(SemaphoreInfo *);
+AcquireSemaphoreInfo: function(): PSemaphoreInfo; cdecl;
 
-extern MagickExport void
-  AcquireSemaphoreInfo(SemaphoreInfo **),
-  DestroySemaphore(void),
-  InitializeSemaphore(void),
-  RelinquishSemaphoreInfo(SemaphoreInfo *);
+ActivateSemaphoreInfo: procedure(PPSemaphoreInfo); cdecl;
+LockSemaphoreInfo: procedure(PSemaphoreInfo); cdecl;
+RelinquishSemaphoreInfo: procedure(PPSemaphoreInfo); cdecl;
+UnlockSemaphoreInfo: procedure(PSemaphoreInfo); cdecl;
+
